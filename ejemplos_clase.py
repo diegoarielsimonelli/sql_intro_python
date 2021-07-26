@@ -89,7 +89,7 @@ def show():
     c.execute('SELECT * FROM persona')
     data = c.fetchall()
     print(data)
-
+ 
     # Leer todas las filas y obtener los datos de a uno
     c.execute('SELECT * FROM persona')
     print('Recorrer los datos desde el cursor')
