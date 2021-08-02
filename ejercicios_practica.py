@@ -90,7 +90,7 @@ def fetch():
     c.execute('SELECT * FROM estudiante')
 
     while True:
-        row = c.fecthone()
+        row = c.fetchone()
         if row is None:
             break
         print(row)
@@ -107,11 +107,10 @@ def search_by_grade(grade):
     # id / name / age
     conn = sqlite3.connect('secundaria.db')
     c = conn.cursor()
-
-    c.execute("""SELECT id,name,age FROM estudiante WHERE grade=?,""", grade)
+    c.execute(
+        """SELECT id, name, age FROM estudiante WHERE grade = ?;""", [grade])
     data = c.fetchall()
     print(data)
-
     conn.close()
 
 
@@ -122,8 +121,8 @@ def insert(new_student):
     conn = sqlite3.connect('secundaria.db')
     c = conn.cursor()
 
-    c.execute('INSERT INTO estudiante (name, age)  VALUES (?,?);', new_student)
-
+    c.executemany(
+        'INSERT INTO estudiante (name, age, grade) VALUES (?,?,?);', new_student)
     conn.commit()
     conn.close()
 
@@ -135,12 +134,8 @@ def modify(id, name):
     # modificar su nombre por "name" pasado como parámetro
     conn = sqlite3.connect('secundaria.db')
     c = conn.cursor()
-
-    rowcount = c.execute("UPDATE estudiante SET id =? WHERE name =?",
-                         (id, name))
-
+    c.execute('UPDATE estudiante SET name = ? WHERE id = ?;', [name, id])
     conn.commit()
-
     conn.close()
 
 
@@ -161,13 +156,15 @@ if __name__ == '__main__':
 
     grade = 3
     search_by_grade(grade)
+    new_student = []
+    new_student.append(['Carlos', 15, 3])
+    new_student.append(['Juana', 16, 4])
+    new_student.append(['Diego', 17, 5])
+    new_student.append(['Mario', 18, 5])
+    new_student.append(['Fernando', 18, 5])
 
-    new_student = ['Carlos', 15, 3]
-    new_student1 = ['Juana', 16, 4]
-    new_student2 = ['Diego', 17, 5]
-    new_student3 = ['Mario', 18, 5]
-    new_student4 = ['Fernando', 18, 5]
-    insert(new_student, new_student1, new_student2, new_student3, new_student4)
+    for i in range(len(new_student)):
+        insert(new_student)
 
     name = '¿Inove?'
     id = 2
